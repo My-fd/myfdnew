@@ -1,0 +1,90 @@
+version: '3'
+services:
+  # Контейнер приложения
+  fd-app:
+    build:
+      context: .
+      dockerfile: ./docker/app.dockerfile
+    container_name: fd-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: fd
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - fd-network
+
+  # Nginx контейнер
+  fd-nginx:
+    image: nginx:alpine
+    container_name: fd-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      fd-network:
+        aliases:
+          - api.fd.local
+
+  # MySQL контейнер
+  fd-mysql:
+    image: mysql:5.7.22
+    container_name: fd-mysql
+    restart: unless-stopped
+    tty: true
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --skip-grant-tables
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: fd
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - fd-network
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+
+  fd-redis:
+    image: redis
+    container_name: fd-redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
+    networks:
+      - fd-network
+
+  fd-mailhog:
+    image: mailhog/mailhog
+    container_name: fd-mailhog
+    restart: unless-stopped
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - '1025:1025' # smtp server
+      - '8025:8025' # web ui
+    networks:
+      - fd-network
+
+# Связываем контейнеры
+networks:
+  fd-network:
+    driver: bridge
+
+# Указываем монтирование к локальной машине
+volumes:
+  dbdata:
+    driver: local
