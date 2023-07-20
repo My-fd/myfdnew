@@ -1,5 +1,5 @@
 # Образ проекта с исходным кодом
-FROM docker.io/sirvellen/sirvellen/myfd:1
+FROM docker.io/sirvellen/sirvellen/myfd
 
 WORKDIR /var/www
 
