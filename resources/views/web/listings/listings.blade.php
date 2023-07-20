@@ -9,7 +9,7 @@
                 <div class="card-header">{{ __('Listings') }}</div>
 
                 <div class="card-body">
-                    <form action="{{ route('search') }}" method="GET">
+                    <form action="{{ route('web.search') }}" method="GET">
                         <div class="form-group">
                             <label for="search">Search Listings</label>
                             <input type="text" name="search" id="search" class="form-control" placeholder="Enter your search query">
