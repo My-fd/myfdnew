@@ -1,5 +1,5 @@
 # Образ проекта с исходным кодом
-FROM registry.gitlab.com/kostylworks/bookaboom-api/php-fpm:5
+FROM docker.io/sirvellen/sirvellen/myfd:1
 
 WORKDIR /var/www
 
