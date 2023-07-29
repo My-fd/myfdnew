@@ -9,17 +9,20 @@
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('web.user.login') }}">
+                    @if ($errors->has('auth'))
+                        <span class="text-danger">{{ $errors->first('auth') }}</span>
+                    @endif
+                    <form method="POST" action="{{ route('web.auth') }}">
                         @csrf
 
                         <div class="form-group">
-                            <label for="email">{{ __('E-Mail Address') }}</label>
-                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            <label for="login">{{ __('Email or Nickname') }}</label>
+                            <input id="login" type="text" class="form-control @error('login') is-invalid @enderror" name="login" value="{{ old('login') }}" required autocomplete="login" autofocus>
 
-                            @error('email')
+                            @error('login')
                             <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
@@ -29,8 +32,8 @@
 
                             @error('password')
                             <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                                <strong>{{ $message }}</strong>
+                            </span>
                             @enderror
                         </div>
 
