@@ -11,10 +11,10 @@
                 <div class="card-body">
                     <form action="{{ route('web.search') }}" method="GET">
                         <div class="form-group">
-                            <label for="search">Search Listings</label>
-                            <input type="text" name="search" id="search" class="form-control" placeholder="Enter your search query">
+                            <label for="search">{{ __("Search Listings") }}</label>
+                            <input type="text" name="search" id="search" class="form-control" placeholder="{{ __('Enter your search query') }}">
                         </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Search') }}</button>
                     </form>
 
                     <hr>

@@ -11,16 +11,17 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * Менеджер админки
  * @property int         $id
- * @property string      $full_name
+ * @property string      $name
+ * @property string      $surname
  * @property string      $email
  * @property string|null $password
  * @property array       $roles
  */
 class Manager extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, FactoryModel;
 
-    const SYSTEM_MANAGER_EMAIL = 'system@storyport.ru';
+    const SYSTEM_MANAGER_EMAIL = 'admin@example.org';
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +29,8 @@ class Manager extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'full_name',
+        'name',
+        'surname',
         'email',
         'password',
         'roles',
