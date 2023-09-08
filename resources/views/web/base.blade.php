@@ -9,7 +9,7 @@
 <body>
 
 <header class="header">
-    <div class="header__nav" id="navbarNav">
+    <div class="container header__nav" id="navbarNav">
         <a href="{{ route('web.home') }}" class="header-logo">
             <img class="header-logo-img" src="./img/logo.svg">
         </a>
@@ -54,14 +54,14 @@
 
 
 
-<div class="container mt-4">
+<div class="">
     @yield('content')
 </div>
 
 <!-- Footer -->
 <footer class="footer mt-auto py-3 bg-light">
     <div class="container">
-        <span class="text-muted">{{ __('Place stickygfdgdffgdffdfdg footer content here.') }}</span>
+        <span class="text-muted">{{ __('Place stick footer content here.') }}</span>
     </div>
 </footer>
 
