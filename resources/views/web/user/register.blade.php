@@ -1,13 +1,13 @@
 @extends('web.base')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+    <div class="sections">
+        <div class="container">
+            <div class="form__block">
                 <div class="card">
-                    <div class="card-header">{{ __('Register') }}</div>
+                <h1 class="card-header">{{ __('Register') }}</h1>
 
-                    <div class="card-body">
+                    <div class="form-body">
                         <form method="POST" action="{{ route('web.signup') }}">
                             @csrf
 
@@ -62,8 +62,8 @@
                             </div>
 
                             <div class="row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
+                                <div class="form-btn">
+                                    <button type="submit" class="btn btn-login">
                                         {{ __('Register') }}
                                     </button>
                                 </div>
