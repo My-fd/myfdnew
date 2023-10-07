@@ -15,6 +15,7 @@ abstract class Property
     protected const TYPE_OBJECT = 'object';
     protected const TYPE_ARRAY  = 'array';
     protected const TYPE_INT    = 'integer';
+    protected const TYPE_FLOAT  = 'float';
     protected const TYPE_BOOL   = 'bool';
 
     /**
