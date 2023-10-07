@@ -3,7 +3,7 @@
         <div class="flex-fill nav-scroller" style="overflow: hidden; width: auto; height: 90%;">
             <div class="p-2" style="height: 76px;">
                 <a class="navbar-brand" href="{{ route('admin.index') }}">
-                    <img src="{{ asset('images/dabster.svg') }}" alt="">
+                    <img src="{{ asset('./img/logo.svg') }}" alt="">
                     @if(env('IS_CANARY', false))
                         <span class="text-warning fw-bold">α</span>
                     @endif
@@ -16,33 +16,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.demands.list') }}">
-                        Запросы на регистрацию
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.slugs.list') }}">
-                        Черный список поддоменов
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.releaseNotes') }}">
-                        Обновления
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.alphaTesters') }}">
-                        Альфа тестеры
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.teams.list') }}">
-                        Команды
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.tariffs.list') }}">
-                        Тарифы
+                    <a class="nav-link" href="{{ route('admin.categories.list') }}">
+                        Категории
                     </a>
                 </li>
                 <li class="nav-item">
@@ -57,18 +32,6 @@
                             <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
                         </svg>
                         Документация
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('admin.globals.list') }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="feather feather-clipboard nav-icon icon-xs me-2">
-                            <circle cx="12" cy="12" r="9" />
-                            <path d="M12,3 C 8,3 8,21 12,21 C 16,21 16,3 12,3"/>
-                            <path d="M3,12 C 3,8 21,8 21,12 C 21,16 3,16 3,12"/>
-                        </svg>
-                        Глобальные настройки
                     </a>
                 </li>
             </ul>

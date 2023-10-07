@@ -18,6 +18,9 @@ Route::domain(env('APP_URL'))->group(function () {
         Route::get('/register', [UserController::class, 'register'])->name('register');
         Route::post('/register', [UserController::class, 'signup'])->name('signup');
 
+        Route::get('/listings', [ListingsController::class, 'index'])->name('listings.index');
+        Route::get('/listing/{listing}', [ListingsController::class, 'show'])->name('listings.show');
+
         // Зона доступная авторизованным пользователям
         Route::middleware('auth:web')->group(function () {
             // Аккаунт пользователя
@@ -26,9 +29,8 @@ Route::domain(env('APP_URL'))->group(function () {
             });
 
             // Объявления
-            Route::name('listings.')->prefix('listings')->group(function () {
-                Route::get('/create-ad', [ListingsController::class, 'createAd'])->name('createAd');
-            });
+            Route::get('/listings/create', [ListingsController::class, 'create'])->name('listings.create');
+            Route::post('/listings/store', [ListingsController::class, 'store'])->name('listings.store');
 
             // Чат
             Route::name('messages.')->prefix('messages')->group(function () {

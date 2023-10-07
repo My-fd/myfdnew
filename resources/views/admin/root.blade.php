@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/theme.min.css') }}">
     <script src="{{ asset('/assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('/assets/js/jquery.min.js') }}"></script>
-    <title>Dabster | @yield('title')</title>
+    <title>MyFd | @yield('title')</title>
 </head>
 <body>
 <div id="db-wrapper">

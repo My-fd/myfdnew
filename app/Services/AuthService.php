@@ -16,10 +16,6 @@ class AuthService
      */
     public function authAdm(string $email, string $password): bool
     {
-        if ($email == Manager::SYSTEM_MANAGER_EMAIL) {
-            return false;
-        }
-
         return Auth::guard('admin')->attempt([
             'email'    => $email,
             'password' => $password,

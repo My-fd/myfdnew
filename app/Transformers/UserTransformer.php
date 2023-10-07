@@ -37,20 +37,20 @@ class UserTransformer
     public static function toArray(User $user): array
     {
         return [
-            'id' => $user->id,
-            'nickname' => $user->nickname,
-            'name' => $user->name,
-            'surname' => $user->surname,
-            'patronymic' => $user->patronymic,
-            'about' => $user->about,
-            'email' => $user->email,
-            'password' => $user->password,
-            'phone' => $user->phone,
-            'country_code' => $user->country_code,
-            'remember_token' => $user->remember_token,
+            'id'                => $user->id,
+            'nickname'          => $user->nickname,
+            'name'              => $user->name,
+            'surname'           => $user->surname,
+            'patronymic'        => $user->patronymic,
+            'about'             => $user->about,
+            'email'             => $user->email,
+            'password'          => $user->password,
+            'phone'             => $user->phone,
+            'country_code'      => $user->country_code,
+            'remember_token'    => $user->remember_token,
             'email_verified_at' => $user->email_verified_at,
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
+            'created_at'        => $user->created_at?->format('Y-m-d h:i'),
+            'updated_at'        => $user->updated_at?->format('Y-m-d h:i'),
         ];
     }
 }

@@ -44,6 +44,7 @@ return [
         'admin' => [
             'driver'   => 'session',
             'provider' => 'managers',
+            'redirect' => '/login'
         ],
 
         'api' => [
@@ -76,10 +77,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'managers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Manager::class,
+        ],
     ],
 
     /*

@@ -54,8 +54,8 @@ class Manager extends Authenticatable
         'roles' => 'array',
     ];
 
-    public static function getSystemManager(): Manager|null
+    public function getFullName()
     {
-        return Manager::query()->where('email', Manager::SYSTEM_MANAGER_EMAIL)->first();
+        return $this->name . ' ' . $this->surname;
     }
 }
