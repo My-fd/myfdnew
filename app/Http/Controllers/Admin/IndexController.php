@@ -10,6 +10,6 @@ class IndexController extends BaseAdminController
 {
     public function index(): Factory|View|Application
     {
-        return view('adm.index');
+        return view('admin.index');
     }
 }
