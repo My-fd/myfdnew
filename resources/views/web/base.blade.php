@@ -3,8 +3,8 @@
 <head>
     <title>@yield('title')</title>
     <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="./css/normalize.css">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="{{ asset('/css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
 </head>
 <body>
 
@@ -35,7 +35,7 @@
                     <a class="nav-link" href="{{ route('web.logout') }}">{{ __('Logout') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-add" href="{{ route('web.listings.createAd') }}">{{ __('Create Ad') }}</a>
+                    <a class="btn btn-add" href="{{ route('web.listings.create') }}">{{ __('Create Ad') }}</a>
                 </li>
                 @endauth
                 @guest
