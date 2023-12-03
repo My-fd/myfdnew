@@ -37,8 +37,8 @@ class UserController extends BaseApiController
      */
     #[PathPost('login', '/v1/login', 'Метод авторизации пользователя', ['Пользователи'])]
     #[RequestFormEncoded('request')]
-    #[PropertyString('login', 'Эл. адрес пользователя', 'pupkin@kostylworks.ru', parent: 'request')]
-    #[PropertyString('password', 'Пароль', 'myGoodPassword', parent: 'request')]
+    #[PropertyString('login', 'Эл. адрес пользователя', 'johndoe@mail.ru', parent: 'request')]
+    #[PropertyString('password', 'Пароль', 'password', parent: 'request')]
     #[ResponseSuccess(200, vRef: UserTransformer::class)]
     #[PropertyString('token', 'Токен авторизации', '1|someToken', parent: 'success.data')]
     #[ResponseError(400, 'Ошибка пользователя', 'Bad Request')]
@@ -84,11 +84,12 @@ class UserController extends BaseApiController
     #[PathPost('register', '/v1/register', 'Метод регистрации нового пользователя', ['Пользователи'])]
     #[RequestFormEncoded('request')]
     #[PropertyString('nickname', 'Имя пользователя', 'John Doe', parent: 'request')]
-    #[PropertyString('email', 'Эл. адрес пользователя', 'johndoe@example.com', parent: 'request')]
-    #[PropertyString('password', 'Пароль', 'myGoodPassword', parent: 'request')]
-    #[PropertyString('password_confirmation', 'Подтверждение пароля', 'myGoodPassword', parent: 'request')]
+    #[PropertyString('email', 'Эл. адрес пользователя', 'johndoe@mail.ru', parent: 'request')]
+    #[PropertyString('password', 'Пароль', 'password', parent: 'request')]
+    #[PropertyString('password_confirmation', 'Подтверждение пароля', 'password', parent: 'request')]
     #[ResponseSuccess(200)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
+    #[ResponseError(422, 'Ошибка валидации', 'Validation Request')]
     #[ResponseError(500, 'Ошибка сервера')]
     public function register(RegisterRequest $request, UserService $service): JsonResponse
     {
