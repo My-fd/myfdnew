@@ -39,15 +39,15 @@ class UserService
     /**
      * Авторизация в АПИ
      *
-     * @param string $email
+     * @param string $login
      * @param string $password
      * @return array
      * @throws ApiAuthException
      */
-    public function authApi(string $email, string $password): array
+    public function authApi(string $login, string $password): array
     {
         /** @var User $user */
-        $user = User::query()->where('email', $email)->first();
+        $user = User::query()->where('email', $login)->orWhere('nickname', $login)->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw new ApiAuthException();

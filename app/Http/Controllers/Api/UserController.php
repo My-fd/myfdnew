@@ -39,7 +39,6 @@ class UserController extends BaseApiController
     #[RequestFormEncoded('request')]
     #[PropertyString('login', 'Эл. адрес пользователя', 'pupkin@kostylworks.ru', parent: 'request')]
     #[PropertyString('password', 'Пароль', 'myGoodPassword', parent: 'request')]
-    #[PropertyString('invitation_token', 'Токен приглашения', 'xdloswoiosdiklskls', true, parent: 'request')]
     #[ResponseSuccess(200, vRef: UserTransformer::class)]
     #[PropertyString('token', 'Токен авторизации', '1|someToken', parent: 'success.data')]
     #[ResponseError(400, 'Ошибка пользователя', 'Bad Request')]
@@ -48,7 +47,7 @@ class UserController extends BaseApiController
     public function login(AuthRequest $request, UserService $service): JsonResponse
     {
         try {
-            [$user, $token] = $service->authApi($request->get('email'), $request->get('password'));
+            [$user, $token] = $service->authApi($request->get('login'), $request->get('password'));
         } catch (ApiAuthException) {
             return $this->errorResponse('Неверный логин или пароль.', 400);
         }

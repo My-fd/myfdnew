@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::domain(env('API_URL'))->prefix('v1')->name('api.')->group(function () {
-    Route::post('/login', [UserController::class, 'login']);
-    Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-    Route::post('/register', [UserController::class, 'register']);
+Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function () {
+    Route::prefix('v1')->group(function () {
+        Route::post('/login', [UserController::class, 'login']);
+        Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('/register', [UserController::class, 'register']);
+    });
 });
