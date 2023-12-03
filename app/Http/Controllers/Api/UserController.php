@@ -109,7 +109,7 @@ class UserController extends BaseApiController
         }
 
         try {
-            [$user, $token] = $service->authApi($user, $request->get('password'));
+            [$user, $token] = $service->authApi($user->email, $request->get('password'));
         } catch (ApiAuthException $e) {
             Log::error('Не удалось авторизовать пользователя после регистрации.', [
                 'message' => $e->getMessage(),
