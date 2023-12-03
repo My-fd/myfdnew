@@ -37,6 +37,6 @@ class AuthController extends BaseAdminController
     {
         $authService->logoutAdm();
 
-        return redirect()->route('admin.auth.loginPage');
+        return redirect()->route('admin.auth');
     }
 }
