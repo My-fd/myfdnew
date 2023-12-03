@@ -12,7 +12,7 @@ update: start
 	docker compose exec fd-app php artisan storage:link
 run: update
 	# Консольные команды
-	docker compose exec -d fd-app php artisan env:sync
+	cp .env.local .env
 
 # Обработчики очередей
 	docker compose exec -d fd-app php artisan queue:work
