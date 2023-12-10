@@ -19,7 +19,6 @@ use App\Openapi\Attributes\PropertyString;
 #[PropertyString('patronymic', 'Отчество', 'Patrick', isNullable: true)]
 #[PropertyString('about', 'Раздел "О себе"', 'Some information about the user', isNullable: true)]
 #[PropertyString('email', 'Почта', 'john.doe@example.com')]
-#[PropertyString('password', 'Пароль', 'hashed_password')]
 #[PropertyString('phone', 'Телефон', '+1234567890')]
 #[PropertyString('country_code', 'Код страны', 'US', isNullable: true)]
 #[PropertyString('remember_token', 'Токен авторизации', 'remember_token_example', isNullable: true)]
@@ -44,7 +43,6 @@ class UserTransformer
             'patronymic'        => $user->patronymic,
             'about'             => $user->about,
             'email'             => $user->email,
-            'password'          => $user->password,
             'phone'             => $user->phone,
             'country_code'      => $user->country_code,
             'remember_token'    => $user->remember_token,

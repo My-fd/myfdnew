@@ -17,11 +17,12 @@ use App\Models\Listing;
 #[PropertyString('title', 'Название объявления', 'Мой товар')]
 #[PropertyString('description', 'Описание объявления', 'Описание товара')]
 #[PropertyFloat('price', 'Цена', 100.10)]
-#[PropertyObject('category', 'Категория объявления', vRef: CategoryTransformer::class)]
-#[PropertyObject('created_at', 'Дата создания объявления')]
-#[PropertyObject('updated_at', 'Дата обновления объявления')]
-class ListingTransformer extends BaseTransformer
+#[PropertyObject('category', 'Категория объявления', ref: CategoryTransformer::class)]
+#[PropertyString('created_at', 'Дата создания объявления', '2023-10-07 07:22')]
+#[PropertyString('updated_at', 'Дата обновления объявления', '2023-10-07 07:22')]
+class ListingTransformer
 {
+    use BaseTransformer;
     /**
      * Трансформирует объявление в массив
      *

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
 use App\Models\Category;
-use App\Models\CategoryColor;
 use App\Models\Listing;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -142,33 +141,33 @@ class CategoriesController extends Controller
 
         return redirect()->back();
 
-        if ($category->isRootCategory()) {
-            Session::flash('error', 'Невозможно удалить корневую категорию.');
+        // if ($category->isRootCategory()) {
+        //     Session::flash('error', 'Невозможно удалить корневую категорию.');
+        //
+        //     return redirect()->back();
+        // }
+        //
+        // /** @var Category $rootCategory */
+        // $rootCategory = Category::query()->where('name', Category::ROOT_CATEGORY)->first();
 
-            return redirect()->back();
-        }
-
-        /** @var Category $rootCategory */
-        $rootCategory = Category::query()->where('name', Category::ROOT_CATEGORY)->first();
-
-        DB::beginTransaction();
-
-        Listing::query()->where('category_id', '=', $category->id)->update(['category_id' => $rootCategory->id]);
-
-        if (!$category->delete()) {
-            Session::flash('error', 'Не удалось удалить категорию. Пожалуйста попробуйте позже');
-
-            Log::error('Не удалось удалить категорию.', [
-                'request' => $request->all(),
-            ]);
-
-            DB::rollBack();
-
-            return redirect()->back();
-        }
-
-        DB::commit();
-
-        return redirect()->route('admin.categories.list');
+        // DB::beginTransaction();
+        //
+        // Listing::query()->where('category_id', '=', $category->id)->update(['category_id' => $rootCategory->id]);
+        //
+        // if (!$category->delete()) {
+        //     Session::flash('error', 'Не удалось удалить категорию. Пожалуйста попробуйте позже');
+        //
+        //     Log::error('Не удалось удалить категорию.', [
+        //         'request' => $request->all(),
+        //     ]);
+        //
+        //     DB::rollBack();
+        //
+        //     return redirect()->back();
+        // }
+        //
+        // DB::commit();
+        //
+        // return redirect()->route('admin.categories.list');
     }
 }

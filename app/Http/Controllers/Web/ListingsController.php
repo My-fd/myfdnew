@@ -14,7 +14,7 @@ class ListingsController extends Controller
     {
         $categories = Category::all();
         $categoryId = $request->input('category_id');
-        $listings = Listing::when($categoryId, function ($query) use ($categoryId) {
+        $listings   = Listing::when($categoryId, function ($query) use ($categoryId) {
             return $query->where('category_id', $categoryId);
         })->paginate(25);
 
@@ -24,6 +24,7 @@ class ListingsController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('web.listings.create', compact('categories'));
     }
 
@@ -48,12 +49,14 @@ class ListingsController extends Controller
     public function update(ListingRequest $request, Listing $listing)
     {
         $listing->update($request->validated());
+
         return redirect()->route('listings.index')->with('success', 'Объявление успешно обновлено.');
     }
 
     public function destroy(Listing $listing)
     {
         $listing->delete();
+
         return redirect()->route('listings.index')->with('success', 'Объявление успешно удалено.');
     }
 }

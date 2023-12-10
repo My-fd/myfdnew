@@ -1,30 +1,27 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
+use App\Models\Category;
 use App\Openapi\Attributes\Additional\Controller;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\Tag;
 use App\OpenapiCustom\ResponseError;
 use App\OpenapiCustom\ResponseSuccess;
-use App\Transformers\ListingTransformer;
+use App\Transformers\CategoryTransformer;
 use Illuminate\Http\JsonResponse;
 
 /**
- * API Контроллер для категорий
- *
+ * Контроллер категорий
+ * class CategoriesController
  * @package App\Http\Controllers\Api
  */
-#[Controller]
+#[\App\Openapi\Attributes\Additional\Controller]
 #[Tag('Категории')]
 class CategoriesController extends BaseApiController
 {
-    /**
-     * Получить список всех категорий
-     *
-     * @return JsonResponse
-     */
-    #[PathGet('index', '/v1/categories', 'Получение списка категорий', ['Категории'])]
-    #[ResponseSuccess(200, vRef: Cate::class)]
+    #[PathGet('categories', '/v1/categories', 'Получение списка категорий', ['Категории'])]
+    #[ResponseSuccess(200, ref: CategoryTransformer::class)]
     #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function index(): JsonResponse

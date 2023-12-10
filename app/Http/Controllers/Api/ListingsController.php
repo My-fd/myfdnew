@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Openapi\Attributes\Additional\Controller;
+use App\Openapi\Attributes\Parameter;
+use App\Openapi\Attributes\ParameterInt;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\PathPost;
 use App\Openapi\Attributes\PropertyFloat;
@@ -14,16 +17,20 @@ use App\OpenapiCustom\ResponseSuccess;
 use App\Transformers\ListingTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ListingRequest;
 use App\Models\Listing;
 
+/**
+ * Контроллер объявлений
+ * class ListingsController
+ * @package App\Http\Controllers\Api
+ */
 #[Controller]
 #[Tag('Объявления')]
 class ListingsController extends BaseApiController
 {
-    #[PathGet('index', '/v1/listings', 'Получение списка объявлений', ['Объявления'])]
-    #[ResponseSuccess(200, vRef: ListingTransformer::class)]
+    #[PathGet('listings', '/v1/listings', 'Получение списка объявлений', ['Объявления'])]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function index(Request $request): JsonResponse
@@ -74,6 +81,7 @@ class ListingsController extends BaseApiController
      * @return JsonResponse
      */
     #[PathGet('show', '/v1/listings/{listing}', 'Получение информации об объявлении', ['Объявления'])]
+    #[ParameterInt('show', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
     #[ResponseSuccess(200, vRef: ListingTransformer::class)]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -89,8 +97,9 @@ class ListingsController extends BaseApiController
      * @param Listing        $listing
      * @return JsonResponse
      */
-    #[PathPost('update', '/v1/listings/{listing}', 'Обновление объявления', ['Объявления'], ['auth'])]
+    #[PathPost('update', '/v1/listings/{listing}/update', 'Обновление объявления', ['Объявления'], ['auth'])]
     #[RequestFormEncoded('request')]
+    #[ParameterInt('update', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
     #[PropertyString('title', 'Название объявления', 'Мой товар', parent: 'request')]
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
@@ -112,7 +121,8 @@ class ListingsController extends BaseApiController
      * @param Listing $listing
      * @return JsonResponse
      */
-    #[PathPost('destroy', '/v1/listings/{listing}', 'Удаление объявления', ['Объявления'], ['auth'])]
+    #[PathPost('destroy', '/v1/listings/{listing}/delete', 'Удаление объявления', ['Объявления'], ['auth'])]
+    #[ParameterInt('destroy', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
     #[ResponseSuccess(204)]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]

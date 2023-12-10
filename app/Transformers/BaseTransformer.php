@@ -2,7 +2,7 @@
 
 namespace App\Transformers;
 
-abstract class BaseTransformer
+trait BaseTransformer
 {
     /**
      * Трансформация массива

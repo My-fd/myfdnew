@@ -14,8 +14,9 @@ use App\Openapi\Attributes\PropertyString;
 #[PropertyInt('id', 'ID категории', '1')]
 #[PropertyString('name', 'Название категории', 'Категория')]
 #[PropertyString('image_url', 'Ссылка на изображение', 'https://example.com/image.jpg')]
-class CategoryTransformer extends BaseTransformer
+class CategoryTransformer
 {
+    use BaseTransformer;
     /**
      * Трансформирует категорию в массив
      *
