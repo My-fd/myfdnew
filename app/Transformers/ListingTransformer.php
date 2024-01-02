@@ -18,11 +18,13 @@ use App\Models\Listing;
 #[PropertyString('description', 'Описание объявления', 'Описание товара')]
 #[PropertyFloat('price', 'Цена', 100.10)]
 #[PropertyObject('category', 'Категория объявления', ref: CategoryTransformer::class)]
+#[PropertyObject('user', 'Автор объявления', ref: UserTransformer::class)]
 #[PropertyString('created_at', 'Дата создания объявления', '2023-10-07 07:22')]
 #[PropertyString('updated_at', 'Дата обновления объявления', '2023-10-07 07:22')]
 class ListingTransformer
 {
     use BaseTransformer;
+
     /**
      * Трансформирует объявление в массив
      *
@@ -36,6 +38,7 @@ class ListingTransformer
             'title'       => $listing->title,
             'description' => $listing->description,
             'price'       => $listing->price,
+            'user'        => UserTransformer::toArray($listing->user),
             'category'    => CategoryTransformer::toArray($listing->category),
             'deleted_at'  => $listing->deleted_at?->format('Y-m-d h:i'),
             'created_at'  => $listing->created_at?->format('Y-m-d h:i'),

@@ -35,7 +35,6 @@ class ListingsController extends BaseApiController
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function index(Request $request): JsonResponse
     {
-        // Получение списка объявлений, возможно с фильтрацией
         $categoryId = $request->input('category_id');
         $query      = Listing::query();
 
@@ -69,7 +68,7 @@ class ListingsController extends BaseApiController
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function store(ListingRequest $request): JsonResponse
     {
-        $listing = Listing::create($request->validated());
+        $listing = Listing::create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
 
         return $this->successResponse(ListingTransformer::toArray($listing), 201);
     }
@@ -110,6 +109,10 @@ class ListingsController extends BaseApiController
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function update(ListingRequest $request, Listing $listing): JsonResponse
     {
+        if ($listing->user_id != $request->user()->id) {
+            return $this->errorResponse('Нет доступа', 403);
+        }
+
         $listing->update($request->validated());
 
         return $this->successResponse(ListingTransformer::toArray($listing));
@@ -118,6 +121,7 @@ class ListingsController extends BaseApiController
     /**
      * Метод для удаления объявления
      *
+     * @param Request $request
      * @param Listing $listing
      * @return JsonResponse
      */
@@ -126,8 +130,12 @@ class ListingsController extends BaseApiController
     #[ResponseSuccess(204)]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function destroy(Listing $listing): JsonResponse
+    public function destroy(Request $request, Listing $listing): JsonResponse
     {
+        if ($listing->user_id != $request->user()->id) {
+            return $this->errorResponse('Нет доступа', 403);
+        }
+
         $listing->delete();
 
         return $this->successResponse([]);
