@@ -87,6 +87,7 @@ class UserController extends BaseApiController
         $user->about        = $request->get('about', $user->about);
         $user->phone        = $request->get('phone', $user->phone);
         $user->country_code = $request->get('country_code', $user->country_code);
+        $user->city         = $request->get('city', $user->city);
 
         if ($user->save()) {
             return $this->successResponse(UserTransformer::toArray($user));

@@ -15,11 +15,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string      $nickname          Никнейм
  * @property string      $name              Имя
  * @property string      $surname           Фамилия
- * @property string|null $patronymic        Отчество
- * @property string|null $about             Раздел "О себе"
  * @property string      $email             Почта
  * @property string      $password          Пароль (зашифрован)
- * @property string      $phone             Телефон
+ * @property string|null $patronymic        Отчество
+ * @property string|null $about             Раздел "О себе"
+ * @property string|null $city              Город
+ * @property string|null $phone             Телефон
  * @property string|null $country_code      Код страны
  * @property string|null $remember_token    Токен авторизации
  * @property Carbon|null $email_verified_at Когда подтвердил почту
