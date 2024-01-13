@@ -16,6 +16,7 @@ use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\Tag;
 use App\Services\Exceptions\ApiAuthException;
 use App\Services\Exceptions\UserSaveException;
+use App\Services\User\Exceptions\UserAlreadyVerifiedException;
 use App\Services\User\UserService;
 use App\Transformers\LoginTransformer;
 use App\Transformers\UserTransformer;
@@ -188,5 +189,33 @@ class UserController extends BaseApiController
         }
 
         return $this->successResponse(LoginTransformer::toArray($user, $token));
+    }
+
+    #[PathGet('verify', '/v1/verify/{token}', 'Верификация email', ['Пользователи'])]
+    #[ParameterInt('verify', Parameter::IN_PATH, 'token', 'Токен верификации', 1, 1)]
+    #[ResponseSuccess(200)]
+    #[ResponseError(404, 'Не найден', 'Not found')]
+    #[ResponseError(500, 'Ошибка сервера')]
+    public function verify(string $token, UserService $service): JsonResponse
+    {
+        try {
+            if ($service->endVerifyEmail($token)) {
+                return $this->successResponse([]);
+            } else {
+                return $this->errorResponse('', 500);
+            }
+        } catch (UserAlreadyVerifiedException $e) {
+            return $this->successResponse(['message' => 'Пользователь уже верифицирован']);
+        }
+    }
+
+    #[PathGet('sendVerify', '/v1/sendVerify', 'Повторное письмо верификация email', ['Пользователи'], ['auth'])]
+    #[ResponseSuccess(200)]
+    #[ResponseError(500, 'Ошибка сервера')]
+    public function sendVerify(Request $request, UserService $service): JsonResponse
+    {
+        $service->beginVerifyEmail($request->user());
+
+        return $this->successResponse([]);
     }
 }

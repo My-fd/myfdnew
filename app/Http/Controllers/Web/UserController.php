@@ -7,6 +7,7 @@ use App\Http\Requests\AuthRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Services\Exceptions\UserSaveException;
+use App\Services\User\Exceptions\UserAlreadyVerifiedException;
 use App\Services\User\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -96,5 +97,18 @@ class UserController extends Controller
         Auth::logout();
 
         return redirect()->route('web.home');
+    }
+
+    public function verify(string $token, UserService $service)
+    {
+        try {
+            if ($service->endVerifyEmail($token)) {
+                return redirect(route('web.home'));
+            } else {
+                abort(500);
+            }
+        } catch (UserAlreadyVerifiedException $e) {
+            return redirect(route('web.home'));
+        }
     }
 }

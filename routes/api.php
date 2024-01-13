@@ -20,6 +20,7 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
         Route::post('/login', [UserController::class, 'login'])->name('login');
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
         Route::post('/register', [UserController::class, 'register'])->name('register');
+        Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
 
         Route::get('/categories', [CategoriesController::class, 'index']);
         Route::get('/listings', [ListingsController::class, 'index'])->name('listings.index');
@@ -32,6 +33,7 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
             Route::post('/listings/{listing}/delete', [ListingsController::class, 'destroy']);
 
             Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+            Route::get('/sendVerify', [UserController::class, 'sendVerify'])->name('user.sendVerify');
             Route::get('/profile/{user}', [UserController::class, 'getProfile'])->name('user.getProfile');
             Route::post('/changeProfile', [UserController::class, 'changeProfile'])->name('user.changeProfile');
             Route::post('/changePassword', [UserController::class, 'changePassword'])->name('user.changePassword');

@@ -11,6 +11,7 @@ Route::domain(env('APP_URL'))->group(function () {
     Route::name('web.')->group(function () {
         // Зона доступная неавторизованным пользователям
         Route::get('/', [IndexController::class, 'index'])->name('home');
+        Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
         Route::get('/search', [SearchController::class, 'search'])->name('search');
         Route::get('/login', [UserController::class, 'login'])->name('login');
         Route::get('/logout', [UserController::class, 'logout'])->name('logout');
