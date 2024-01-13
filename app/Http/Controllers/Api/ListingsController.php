@@ -51,12 +51,6 @@ class ListingsController extends BaseApiController
         ]);
     }
 
-    /**
-     * Метод для создания объявления
-     *
-     * @param ListingRequest $request
-     * @return JsonResponse
-     */
     #[PathPost('store', '/v1/listings', 'Создание объявления', ['Объявления'], ['auth'])]
     #[RequestFormEncoded('request')]
     #[PropertyString('title', 'Название объявления', 'Мой товар', parent: 'request')]
@@ -73,12 +67,6 @@ class ListingsController extends BaseApiController
         return $this->successResponse(ListingTransformer::toArray($listing), 201);
     }
 
-    /**
-     * Метод для получения информации об объявлении
-     *
-     * @param Listing $listing
-     * @return JsonResponse
-     */
     #[PathGet('show', '/v1/listings/{listing}', 'Получение информации об объявлении', ['Объявления'])]
     #[ParameterInt('show', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
     #[ResponseSuccess(200, vRef: ListingTransformer::class)]
@@ -89,13 +77,6 @@ class ListingsController extends BaseApiController
         return $this->successResponse(ListingTransformer::toArray($listing));
     }
 
-    /**
-     * Метод для обновления объявления
-     *
-     * @param ListingRequest $request
-     * @param Listing        $listing
-     * @return JsonResponse
-     */
     #[PathPost('update', '/v1/listings/{listing}/update', 'Обновление объявления', ['Объявления'], ['auth'])]
     #[RequestFormEncoded('request')]
     #[ParameterInt('update', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
@@ -118,13 +99,6 @@ class ListingsController extends BaseApiController
         return $this->successResponse(ListingTransformer::toArray($listing));
     }
 
-    /**
-     * Метод для удаления объявления
-     *
-     * @param Request $request
-     * @param Listing $listing
-     * @return JsonResponse
-     */
     #[PathPost('destroy', '/v1/listings/{listing}/delete', 'Удаление объявления', ['Объявления'], ['auth'])]
     #[ParameterInt('destroy', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
     #[ResponseSuccess(204)]

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ChangeProfileRequest extends FormRequest
 {
@@ -14,13 +15,13 @@ class ChangeProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'        => 'required|string|email|max:255|unique:users,email',
-            'name'         => 'required|string|max:64',
-            'surname'      => 'required|string|max:64',
+            'email'        => ['nullable', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore(auth()->user()->id)],
+            'name'         => 'nullable|string|max:64',
+            'surname'      => 'nullable|string|max:64',
             'patronymic'   => 'nullable|string|max:64',
             'about'        => 'nullable|string|max:1024',
-            'phone'        => 'required|string|max:20|unique:users,phone',
-            'country_code' => 'required|string|max:5',
+            'phone'        => ['nullable', 'string', 'max:20', Rule::unique('users', 'phone')->ignore(auth()->user()->id)],
+            'country_code' => 'nullable|string|max:5',
         ];
     }
 }
