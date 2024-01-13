@@ -44,6 +44,7 @@ class UserTransformer
             'about'             => $user->about,
             'email'             => $user->email,
             'phone'             => $user->phone,
+            'city'              => $user->city,
             'country_code'      => $user->country_code,
             'remember_token'    => $user->remember_token,
             'email_verified_at' => $user->email_verified_at,

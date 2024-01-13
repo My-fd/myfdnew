@@ -10,6 +10,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Openapi\Attributes\Additional\Controller;
 use App\Openapi\Attributes\Parameter;
+use App\Openapi\Attributes\ParameterInt;
 use App\Openapi\Attributes\ParameterString;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\Tag;
@@ -59,6 +60,16 @@ class UserController extends BaseApiController
     public function profile(Request $request): JsonResponse
     {
         return $this->successResponse(UserTransformer::toArray($request->user()));
+    }
+
+    #[PathGet('getProfile', '/v1/profile/{user}', 'Профиль другого пользователя', ['Пользователи'], ['auth'])]
+    #[ParameterInt('getProfile', Parameter::IN_PATH, 'user', 'ID пользователя', 1, 1)]
+    #[ResponseSuccess(200, vRef: UserTransformer::class)]
+    #[ResponseError(404, 'Не найден', 'Not found')]
+    #[ResponseError(500, 'Ошибка сервера')]
+    public function getProfile(Request $request, User $user): JsonResponse
+    {
+        return $this->successResponse(UserTransformer::toArray($user));
     }
 
     #[PathPost('changeProfile', '/v1/changeProfile', 'Смена профиля пользователя', ['Пользователи'], ['auth'])]

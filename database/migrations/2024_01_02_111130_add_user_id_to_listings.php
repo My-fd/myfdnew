@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        \App\Models\Listing::query()->delete();
         Schema::table('listings', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
         });

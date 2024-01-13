@@ -32,6 +32,7 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
             Route::post('/listings/{listing}/delete', [ListingsController::class, 'destroy']);
 
             Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+            Route::get('/profile/{user}', [UserController::class, 'getProfile'])->name('user.getProfile');
             Route::post('/changeProfile', [UserController::class, 'changeProfile'])->name('user.changeProfile');
             Route::post('/changePassword', [UserController::class, 'changePassword'])->name('user.changePassword');
         });
