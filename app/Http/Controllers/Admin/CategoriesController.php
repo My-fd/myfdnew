@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryRequest;
+use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Listing;
 use Illuminate\Contracts\Foundation\Application;
@@ -46,7 +47,7 @@ class CategoriesController extends Controller
     public function edit(Category $category)
     {
         return view('admin.categories.edit', [
-            'category' => $category,
+            'category' => $category, 'allAttributes' => Attribute::all(),
         ]);
     }
 
@@ -96,7 +97,7 @@ class CategoriesController extends Controller
      */
     public function add()
     {
-        return view('admin.categories.add');
+        return view('admin.categories.add', ['allAttributes' => Attribute::all()]);
     }
 
     /**
