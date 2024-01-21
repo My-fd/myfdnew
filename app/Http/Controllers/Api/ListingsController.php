@@ -57,12 +57,22 @@ class ListingsController extends BaseApiController
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
+    #[PropertyString('attributes', 'Атрибуты объявления', '[{"attribute_id": 1, "value": "Значение"}]', parent: 'request')]
     #[ResponseSuccess(201, vRef: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function store(ListingRequest $request): JsonResponse
     {
         $listing = Listing::create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
+
+        if ($request->filled('attributes')) {
+            $attributes = json_decode($request->input('attributes'), true);
+            foreach ($attributes as $attribute) {
+                if (isset($attribute['attribute_id']) && isset($attribute['value'])) {
+                    $listing->attributes()->attach($attribute['attribute_id'], ['value' => $attribute['value']]);
+                }
+            }
+        }
 
         return $this->successResponse(ListingTransformer::toArray($listing), 201);
     }
@@ -84,6 +94,7 @@ class ListingsController extends BaseApiController
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
+    #[PropertyString('attributes', 'Атрибуты объявления', '[{"attribute_id": 1, "value": "Значение"}]', parent: 'request')]
     #[ResponseSuccess(200, vRef: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
@@ -95,6 +106,14 @@ class ListingsController extends BaseApiController
         }
 
         $listing->update($request->validated());
+        if ($request->filled('attributes')) {
+            $attributes = json_decode($request->input('attributes'), true);
+            foreach ($attributes as $attribute) {
+                if (isset($attribute['attribute_id']) && isset($attribute['value'])) {
+                    $listing->attributes()->attach($attribute['attribute_id'], ['value' => $attribute['value']]);
+                }
+            }
+        }
 
         return $this->successResponse(ListingTransformer::toArray($listing));
     }

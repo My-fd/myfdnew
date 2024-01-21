@@ -65,7 +65,8 @@ class CategoriesController extends Controller
         //     return redirect()->back();
         // }
 
-        $category->name = $updateRequest->get('name');
+        $category->name      = $updateRequest->get('name');
+        $category->parent_id = $updateRequest->get('parent_id');
 
         // Загрузка изображения
         if ($updateRequest->hasFile('image')) {
@@ -74,7 +75,7 @@ class CategoriesController extends Controller
             $category->image_url = $imagePath;
         }
 
-        if (!$category->update()) {
+        if (!$category->save()) {
             Session::flash('error', 'Не удалось обновить категорию. Пожалуйста, попробуйте позже');
 
             Log::error('Не удалось обновить категорию.', [
@@ -83,6 +84,7 @@ class CategoriesController extends Controller
 
             return redirect()->back();
         }
+        $category->attributes()->sync($updateRequest->input('attributes', []));
 
         return redirect()->route('admin.categories.list');
     }
@@ -106,8 +108,9 @@ class CategoriesController extends Controller
      */
     public function store(CategoryRequest $createRequest): RedirectResponse
     {
-        $category       = new Category();
-        $category->name = $createRequest->get('name');
+        $category            = new Category();
+        $category->name      = $createRequest->get('name');
+        $category->parent_id = $createRequest->get('parent_id');
 
         // Загрузка изображения
         if ($createRequest->hasFile('image')) {
@@ -124,6 +127,7 @@ class CategoriesController extends Controller
 
             return redirect()->back();
         }
+        $category->attributes()->sync($createRequest->input('attributes', []));
 
         return redirect()->route('admin.categories.list');
     }

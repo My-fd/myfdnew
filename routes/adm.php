@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Admin\AttributeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,5 +38,7 @@ Route::domain(env('ADM_URL'))->name('admin.')->group(function () {
         Route::get('/categories/{category}/edit', [Admin\CategoriesController::class, 'edit'])->name('categories.edit');
         Route::post('/categories/{category}/update', [Admin\CategoriesController::class, 'update'])->name('categories.update');
         Route::post('/categories/{category}/delete', [Admin\CategoriesController::class, 'delete'])->name('categories.delete');
+
+        Route::resource('admin/attributes', AttributeController::class);
     });
 });

@@ -33,6 +33,16 @@ class ListingTransformer
      */
     public static function toArray(Listing $listing): array
     {
+        $attributes = [];
+
+        foreach ($listing->attributes as $attribute) {
+            $attributes[] = [
+                'id'    => $attribute['id'],
+                'name'  => $attribute['name'],
+                'value' => $attribute['pivot']['value'],
+            ];
+        }
+
         return [
             'id'          => $listing->id,
             'title'       => $listing->title,
@@ -40,6 +50,7 @@ class ListingTransformer
             'price'       => $listing->price,
             'user'        => UserTransformer::toArray($listing->user),
             'category'    => CategoryTransformer::toArray($listing->category),
+            'attributes'  => $attributes,
             'deleted_at'  => $listing->deleted_at?->format('Y-m-d h:i'),
             'created_at'  => $listing->created_at?->format('Y-m-d h:i'),
             'updated_at'  => $listing->updated_at?->format('Y-m-d h:i'),

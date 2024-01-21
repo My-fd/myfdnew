@@ -21,6 +21,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ route('admin.attributes.index') }}">
+                        Атрибуты
+                    </a>
+                </li>
+                <li class="nav-item">
                     <div class="navbar-heading">Служебное</div>
                 </li>
                 <li class="nav-item">

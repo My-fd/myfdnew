@@ -34,6 +34,25 @@
                             </span>
                                 @enderror
                             </div>
+                            <div class="form-group">
+                                <label for="parent_id">{{ __('Родительская категория') }}</label>
+                                <select class="form-control" id="parent_id" name="parent_id">
+                                    <option value="">Без родительской категории</option>
+                                    @foreach(App\Models\Category::all() as $parentCategory)
+                                        <option value="{{ $parentCategory->id }}" {{ $category->parent_id == $parentCategory->id ? 'selected' : '' }}>
+                                            {{ $parentCategory->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="attributes">Атрибуты</label>
+                                <select multiple class="form-control" id="attributes" name="attributes[]">
+                                    @foreach($allAttributes as $attribute)
+                                        <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-success float-right">{{ __('Сохранить') }}</button>
                         </form>
                     </div>
