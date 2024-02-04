@@ -13,6 +13,7 @@ use App\Openapi\Attributes\PropertyString;
  */
 #[Component]
 #[PropertyInt('id', 'ID категории', '1')]
+#[PropertyInt('parent_id', 'ID родительской категории', '1', true)]
 #[PropertyString('name', 'Название категории', 'Категория')]
 #[PropertyString('image_url', 'Ссылка на изображение', 'https://example.com/image.jpg')]
 #[PropertyObject('attributes', ref: AttributesTransformer::class)]
@@ -34,6 +35,7 @@ class CategoryTransformer
 
         return [
             'id'         => $category->id,
+            'parent_id'  => $category->parent_id,
             'name'       => $category->name,
             'image_url'  => asset($category->image_url),
             'attributes' => $attributesData,
