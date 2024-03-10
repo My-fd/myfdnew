@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::domain(env('ADM_URL'))->name('admin.')->group(function () {
-    Route::get('/login', [Admin\AuthController::class, 'loginPage'])->name('auth');
+    Route::get('/login', [Admin\AuthController::class, 'loginPage'])->name('auth.page');
     Route::post('/login', [Admin\AuthController::class, 'login'])->name('auth');
     Route::get('/logout', [Admin\AuthController::class, 'logout'])->name('logout');
 

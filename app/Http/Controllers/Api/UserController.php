@@ -19,6 +19,7 @@ use App\Services\Exceptions\UserSaveException;
 use App\Services\User\Exceptions\UserAlreadyVerifiedException;
 use App\Services\User\UserService;
 use App\Transformers\LoginTransformer;
+use App\Transformers\UserProfileTransformer;
 use App\Transformers\UserTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ class UserController extends BaseApiController
     #[RequestFormEncoded('request')]
     #[PropertyString('login', 'Эл. адрес пользователя', 'johndoe@mail.ru', parent: 'request')]
     #[PropertyString('password', 'Пароль', 'password', parent: 'request')]
-    #[ResponseSuccess(200, vRef: UserTransformer::class)]
+    #[ResponseSuccess(200, vRef: UserProfileTransformer::class)]
     #[PropertyString('token', 'Токен авторизации', '1|someToken', parent: 'success.data')]
     #[ResponseError(400, 'Ошибка пользователя', 'Bad Request')]
     #[ResponseError(423, 'Ресурс заблокирован', 'Locked')]
@@ -55,12 +56,12 @@ class UserController extends BaseApiController
     }
 
     #[PathGet('profile', '/v1/profile', 'Профиль пользователя', ['Пользователи'], ['auth'])]
-    #[ResponseSuccess(200, vRef: UserTransformer::class)]
+    #[ResponseSuccess(200, vRef: UserProfileTransformer::class)]
     #[ResponseError(404, 'Не найден', 'Not found')]
     #[ResponseError(500, 'Ошибка сервера')]
     public function profile(Request $request): JsonResponse
     {
-        return $this->successResponse(UserTransformer::toArray($request->user()));
+        return $this->successResponse(UserProfileTransformer::toArray($request->user()));
     }
 
     #[PathGet('getProfile', '/v1/profile/{user}', 'Профиль другого пользователя', ['Пользователи'], ['auth'])]
@@ -82,7 +83,7 @@ class UserController extends BaseApiController
     #[PropertyString('about', 'О себе', 'Родился в селе Дураков', parent: 'request')]
     #[PropertyString('phone', 'Телефон', '9876543210', parent: 'request')]
     #[PropertyString('country_code', 'Код страны', '+7', parent: 'request')]
-    #[ResponseSuccess(200, vRef: UserTransformer::class)]
+    #[ResponseSuccess(200, vRef: UserProfileTransformer::class)]
     #[PropertyString('token', 'Токен авторизации', '1|someToken', parent: 'success.data')]
     #[ResponseError(400, 'Ошибка пользователя', 'Bad Request')]
     #[ResponseError(423, 'Ресурс заблокирован', 'Locked')]
@@ -102,7 +103,7 @@ class UserController extends BaseApiController
         $user->city         = $request->get('city', $user->city);
 
         if ($user->save()) {
-            return $this->successResponse(UserTransformer::toArray($user));
+            return $this->successResponse(UserProfileTransformer::toArray($user));
         }
 
         return $this->errorResponse('Не удалось сохранить пользователя', 500);
@@ -112,7 +113,7 @@ class UserController extends BaseApiController
     #[RequestFormEncoded('request')]
     #[PropertyString('password', 'Пароль', 'password', parent: 'request')]
     #[PropertyString('password_confirmation', 'Пароль', 'password', parent: 'request')]
-    #[ResponseSuccess(200, vRef: UserTransformer::class)]
+    #[ResponseSuccess(200, vRef: UserProfileTransformer::class)]
     #[PropertyString('token', 'Токен авторизации', '1|someToken', parent: 'success.data')]
     #[ResponseError(400, 'Ошибка пользователя', 'Bad Request')]
     #[ResponseError(422, 'Неверный пароль', 'Validation error')]
@@ -127,7 +128,7 @@ class UserController extends BaseApiController
             $user->password = Hash::make($request->get('password'));
 
             if ($user->save()) {
-                return $this->successResponse(UserTransformer::toArray($user));
+                return $this->successResponse(UserProfileTransformer::toArray($user));
             }
         } else {
             return $this->errorResponse('Неверный пароль', 422);

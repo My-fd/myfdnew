@@ -16,9 +16,9 @@ use App\OpenapiCustom\ResponseError;
 use App\OpenapiCustom\ResponseSuccess;
 use App\Transformers\ListingTransformer;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Requests\ListingRequest;
 use App\Models\Listing;
+use Illuminate\Http\Request;
 
 /**
  * Контроллер объявлений
@@ -37,6 +37,28 @@ class ListingsController extends BaseApiController
     {
         $categoryId = $request->input('category_id');
         $query      = Listing::query();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        $listings = $query->paginate(25);
+
+        return $this->successResponse([
+            'data'     => ListingTransformer::manyToArray($listings->items()),
+            'page'     => $listings->currentPage(),
+            'lastPage' => $listings->lastPage(),
+        ]);
+    }
+
+    #[PathGet('listings.my', '/v1/listings/my', 'Получение списка моих объявлений', ['Объявления'], ['auth'])]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
+    #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
+    #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
+    public function my(Request $request): JsonResponse
+    {
+        $categoryId = $request->input('category_id');
+        $query      = Listing::query()->where('user_id', '=', $request->user()->id);
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);

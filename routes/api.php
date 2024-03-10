@@ -22,15 +22,12 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
         Route::post('/register', [UserController::class, 'register'])->name('register');
         Route::get('/verify/{token}', [UserController::class, 'verify'])->name('verify');
 
-        Route::get('/categories', [CategoriesController::class, 'index']);
-        Route::get('/listings', [ListingsController::class, 'index'])->name('listings.index');
-        Route::get('/listings/{listing}', [ListingsController::class, 'show'])->name('listings.show');
-
         /** Авторизованная зона */
         Route::middleware('auth:sanctum')->group(function () {
-            Route::post('/listings', [ListingsController::class, 'store']);
-            Route::post('/listings/{listing}/update', [ListingsController::class, 'update']);
-            Route::post('/listings/{listing}/delete', [ListingsController::class, 'destroy']);
+            Route::get('/listings/my', [ListingsController::class, 'my'])->name('listings.my');
+            Route::post('/listings', [ListingsController::class, 'store'])->name('listings.store');
+            Route::post('/listings/{listing}/update', [ListingsController::class, 'update'])->name('listings.update');
+            Route::post('/listings/{listing}/delete', [ListingsController::class, 'destroy'])->name('listings.destroy');
 
             Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
             Route::get('/sendVerify', [UserController::class, 'sendVerify'])->name('user.sendVerify');
@@ -38,5 +35,10 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
             Route::post('/changeProfile', [UserController::class, 'changeProfile'])->name('user.changeProfile');
             Route::post('/changePassword', [UserController::class, 'changePassword'])->name('user.changePassword');
         });
+
+        /** Неавторизованная зона */
+        Route::get('/categories', [CategoriesController::class, 'index']);
+        Route::get('/listings', [ListingsController::class, 'index'])->name('listings.index');
+        Route::get('/listings/{listing}', [ListingsController::class, 'show'])->name('listings.show');
     });
 });
