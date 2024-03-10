@@ -32,8 +32,12 @@ use Illuminate\Http\Request;
 #[Tag('Объявления')]
 class ListingsController extends BaseApiController
 {
-    #[PathGet('listings', '/v1/listings', 'Получение списка объявлений', ['Объявления'])]
-    #[ParameterInt('api.listings.user', Parameter::IN_PATH, 'user_id', 'ID пользователя')]
+    #[PathGet('listings.index', '/v1/listings', 'Получение списка объявлений', ['Объявления'])]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'category_id', 'ID категории')]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'user_id', 'ID пользователя')]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'search', 'Поиск по объявления')]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'from', 'Поиск по объявления после даты YYYY-MM-DD')]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'before', 'Поиск по объявления до даты YYYY-MM-DD')]
     #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -53,6 +57,19 @@ class ListingsController extends BaseApiController
 
             $query->where('user_id', '=', $request->get('user_id'));
         }
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->get('search') . '%');
+        }
+
+        if ($request->filled('from')) {
+            $query->whereDate('created_at', '>=', $request->get('from'));
+        }
+
+        if ($request->filled('before')) {
+            $query->whereDate('created_at', '<=', $request->get('before'));
+        }
+        
 
         $listings = $query->paginate(25);
 
