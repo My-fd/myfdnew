@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Attribute;
+use App\Models\User;
 use App\Openapi\Attributes\Additional\Controller;
 use App\Openapi\Attributes\Parameter;
 use App\Openapi\Attributes\ParameterInt;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\PathPost;
+use App\Openapi\Attributes\PropertyArray;
 use App\Openapi\Attributes\PropertyFloat;
 use App\Openapi\Attributes\PropertyInt;
 use App\Openapi\Attributes\PropertyString;
@@ -30,6 +33,7 @@ use Illuminate\Http\Request;
 class ListingsController extends BaseApiController
 {
     #[PathGet('listings', '/v1/listings', 'Получение списка объявлений', ['Объявления'])]
+    #[ParameterInt('api.listings.user', Parameter::IN_PATH, 'user_id', 'ID пользователя')]
     #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -40,6 +44,14 @@ class ListingsController extends BaseApiController
 
         if ($categoryId) {
             $query->where('category_id', $categoryId);
+        }
+
+        if ($request->filled('user_id')) {
+            if (!User::query()->where('id', '=', $request->get('user_id'))->exists()) {
+                return $this->errorResponse('Такого пользователя не существует.', 404);
+            }
+
+            $query->where('user_id', '=', $request->get('user_id'));
         }
 
         $listings = $query->paginate(25);
@@ -79,7 +91,7 @@ class ListingsController extends BaseApiController
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
-    #[PropertyString('attributes', 'Атрибуты объявления', '[{"attribute_id": 1, "value": "Значение"}]', parent: 'request')]
+    #[PropertyString('attribute[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
     #[ResponseSuccess(201, vRef: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -88,10 +100,10 @@ class ListingsController extends BaseApiController
         $listing = Listing::create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
 
         if ($request->filled('attributes')) {
-            $attributes = json_decode($request->input('attributes'), true);
-            foreach ($attributes as $attribute) {
-                if (isset($attribute['attribute_id']) && isset($attribute['value'])) {
-                    $listing->attributes()->attach($attribute['attribute_id'], ['value' => $attribute['value']]);
+            $attributes = $request->input('attribute');
+            foreach ($attributes as $key => $attribute) {
+                if (Attribute::query()->where('id', '=', $key)->exists()) {
+                    $listing->attributes()->attach($key, ['value' => $attribute]);
                 }
             }
         }
