@@ -108,7 +108,7 @@ class ListingsController extends BaseApiController
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
-    #[PropertyString('attribute[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
+    #[PropertyString('attributes[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
     #[ResponseSuccess(201, vRef: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -117,7 +117,7 @@ class ListingsController extends BaseApiController
         $listing = Listing::create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
 
         if ($request->filled('attributes')) {
-            $attributes = $request->input('attribute');
+            $attributes = $request->get('attributes');
             foreach ($attributes as $key => $attribute) {
                 if (Attribute::query()->where('id', '=', $key)->exists()) {
                     $listing->attributes()->attach($key, ['value' => $attribute]);
@@ -145,7 +145,7 @@ class ListingsController extends BaseApiController
     #[PropertyString('description', 'Описание объявления', 'Описание товара', parent: 'request')]
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
-    #[PropertyString('attribute[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
+    #[PropertyString('attributes[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
     #[ResponseSuccess(200, vRef: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
@@ -158,7 +158,7 @@ class ListingsController extends BaseApiController
 
         $listing->update($request->validated());
         if ($request->filled('attributes')) {
-            $attributes = $request->input('attribute');
+            $attributes = $request->get('attributes');
             foreach ($attributes as $key => $attribute) {
                 if (Attribute::query()->where('id', '=', $key)->exists()) {
                     $listing->attributes()->attach($key, ['value' => $attribute]);
