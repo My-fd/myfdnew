@@ -9,6 +9,7 @@ use App\Openapi\Attributes\Parameter;
 use App\Openapi\Attributes\ParameterInt;
 use App\Openapi\Attributes\ParameterString;
 use App\Openapi\Attributes\PathGet;
+use App\Openapi\Attributes\PropertyString;
 use App\Openapi\Attributes\Tag;
 use App\Services\Address\AddressService;
 use App\Transformers\AddressTransformer;
@@ -51,6 +52,13 @@ class AddressController extends BaseApiController
 
     #[PathPost('address.store', '/v1/addresses/store', 'Создание адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
+    #[PropertyString('country', 'Страна', 'Россия', parent: 'request')]
+    #[PropertyString('city', 'Город', 'Москва', parent: 'request')]
+    #[PropertyString('street', 'Улица', 'Примерная', parent: 'request')]
+    #[PropertyString('house_number', 'Номер дома', '1', parent: 'request')]
+    #[PropertyString('floor', 'Этаж', '5', false, parent: 'request')]
+    #[PropertyString('zip', 'Почтовый индекс', '123456', parent: 'request')]
+    #[PropertyString('additional_info', 'Дополнительная информация', 'Квартира 10', false, parent: 'request')]
     #[ResponseSuccess(201, ref: AddressTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера')]
@@ -78,6 +86,13 @@ class AddressController extends BaseApiController
     #[PathPost('address.update', '/v1/addresses/{address}/update', 'Обновление адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
     #[ParameterInt('address.update', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
+    #[PropertyString('country', 'Страна', 'Россия', parent: 'request')]
+    #[PropertyString('city', 'Город', 'Москва', parent: 'request')]
+    #[PropertyString('street', 'Улица', 'Примерная', parent: 'request')]
+    #[PropertyString('house_number', 'Номер дома', '1', parent: 'request')]
+    #[PropertyString('floor', 'Этаж', '5', false, parent: 'request')]
+    #[PropertyString('zip', 'Почтовый индекс', '123456', parent: 'request')]
+    #[PropertyString('additional_info', 'Дополнительная информация', 'Квартира 10', false, parent: 'request')]
     #[ResponseSuccess(200, ref: AddressTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Адрес не найден', 'Not Found')]
