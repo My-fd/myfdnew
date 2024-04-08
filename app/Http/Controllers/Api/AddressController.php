@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Openapi\Attributes\Additional\Controller;
 use App\Openapi\Attributes\Parameter;
 use App\Openapi\Attributes\ParameterInt;
+use App\Openapi\Attributes\ParameterString;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\Tag;
 use App\Services\Address\AddressService;
@@ -29,7 +30,7 @@ class AddressController extends BaseApiController
         $this->addressService = $addressService;
     }
 
-    #[PathGet('index', '/v1/addresses', 'Получение списка адресов', ['Адреса'], ['auth'])]
+    #[PathGet('address.index', '/v1/addresses', 'Получение списка адресов', ['Адреса'], ['auth'])]
     #[ResponseSuccess(200, ref: AddressTransformer::class)]
     #[ResponseError(500, 'Ошибка сервера')]
     public function index(Request $request): JsonResponse
@@ -37,8 +38,9 @@ class AddressController extends BaseApiController
         return $this->successResponse(AddressTransformer::manyToArray($request->user()->addresses));
     }
 
-    #[PathGet('ac', '/v1/addresses/ac', 'Автодополнение адреса', ['Адреса'], ['auth'])]
+    #[PathPost('address.ac', '/v1/addresses/ac', 'Автодополнение адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
+    #[ParameterString('address.ac', Parameter::IN_QUERY, 'q', 'Адрес строкой', 'Москва, Ленина 23')]
     #[ResponseSuccess(201, ref: AddressTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера')]
@@ -47,7 +49,7 @@ class AddressController extends BaseApiController
         return $this->successResponse($service->ac($request->get('q')));
     }
 
-    #[PathPost('store', '/v1/addresses', 'Создание адреса', ['Адреса'], ['auth'])]
+    #[PathPost('address.store', '/v1/addresses/store', 'Создание адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
     #[ResponseSuccess(201, ref: AddressTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
@@ -62,8 +64,9 @@ class AddressController extends BaseApiController
         return $this->successResponse(AddressTransformer::toArray($address), 201);
     }
 
-    #[PathGet('show', '/v1/addresses/{address}', 'Получение адреса по ID', ['Адреса'], ['auth'])]
-    #[ParameterInt('show', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
+    #[PathGet('address.show', '/v1/addresses/{address}', 'Получение адреса по ID', ['Адреса'], ['auth'])]
+    #[RequestFormEncoded('request')]
+    #[ParameterInt('address.show', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
     #[ResponseSuccess(200, ref: AddressTransformer::class)]
     #[ResponseError(404, 'Адрес не найден', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера')]
@@ -72,9 +75,9 @@ class AddressController extends BaseApiController
         return $this->successResponse(AddressTransformer::toArray($address));
     }
 
-    #[PathPost('update', '/v1/addresses/{address}/update', 'Обновление адреса', ['Адреса'], ['auth'])]
+    #[PathPost('address.update', '/v1/addresses/{address}/update', 'Обновление адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
-    #[ParameterInt('update', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
+    #[ParameterInt('address.update', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
     #[ResponseSuccess(200, ref: AddressTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Адрес не найден', 'Not Found')]
@@ -90,8 +93,8 @@ class AddressController extends BaseApiController
         return $this->successResponse(AddressTransformer::toArray($updatedAddress));
     }
 
-    #[PathPost('delete', '/v1/addresses/{address}/delete', 'Удаление адреса', ['Адреса'], ['auth'])]
-    #[ParameterInt('delete', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
+    #[PathPost('address.delete', '/v1/addresses/{address}/delete', 'Удаление адреса', ['Адреса'], ['auth'])]
+    #[ParameterInt('address.delete', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
     #[ResponseSuccess(204)]
     #[ResponseError(404, 'Адрес не найден', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера')]

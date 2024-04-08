@@ -35,8 +35,8 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
 
             /** Адреса */
             Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
-            Route::get('/addresses/ac', [AddressController::class, 'ac'])->name('addresses.ac');
-            Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+            Route::post('/addresses/store', [AddressController::class, 'store'])->name('addresses.store');
+            Route::post('/addresses/ac', [AddressController::class, 'ac'])->name('addresses.ac');
             Route::get('/addresses/{address}', [AddressController::class, 'show'])->name('addresses.show');
             Route::post('/addresses/{address}/update', [AddressController::class, 'update'])->name('addresses.update');
             Route::post('/addresses/{address}/delete', [AddressController::class, 'delete'])->name('addresses.delete');
