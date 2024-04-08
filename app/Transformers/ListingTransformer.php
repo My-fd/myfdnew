@@ -19,6 +19,7 @@ use App\Models\Listing;
 #[PropertyFloat('price', 'Цена', 100.10)]
 #[PropertyObject('category', 'Категория объявления', ref: CategoryTransformer::class)]
 #[PropertyObject('user', 'Автор объявления', ref: UserTransformer::class)]
+#[PropertyString('city', 'Город объявления', 'Москва')]
 #[PropertyString('created_at', 'Дата создания объявления', '2023-10-07 07:22')]
 #[PropertyString('updated_at', 'Дата обновления объявления', '2023-10-07 07:22')]
 class ListingTransformer
@@ -51,6 +52,7 @@ class ListingTransformer
             'user'        => UserTransformer::toArray($listing->user),
             'category'    => CategoryTransformer::toArray($listing->category),
             'attributes'  => $attributes,
+            'city'        => $listing->address?->city,
             'deleted_at'  => $listing->deleted_at?->format('Y-m-d h:i'),
             'created_at'  => $listing->created_at?->format('Y-m-d h:i'),
             'updated_at'  => $listing->updated_at?->format('Y-m-d h:i'),

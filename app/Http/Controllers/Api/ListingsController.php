@@ -38,6 +38,7 @@ class ListingsController extends BaseApiController
     #[ParameterInt('listings.index', Parameter::IN_QUERY, 'search', 'Поиск по объявления')]
     #[ParameterInt('listings.index', Parameter::IN_QUERY, 'from', 'Поиск по объявления после даты YYYY-MM-DD')]
     #[ParameterInt('listings.index', Parameter::IN_QUERY, 'before', 'Поиск по объявления до даты YYYY-MM-DD')]
+    #[ParameterInt('listings.index', Parameter::IN_QUERY, 'city', 'Поиск по городу')]
     #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка запроса', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
@@ -69,7 +70,14 @@ class ListingsController extends BaseApiController
         if ($request->filled('before')) {
             $query->whereDate('created_at', '<=', $request->get('before'));
         }
-        
+
+        if ($request->filled('city')) {
+            $city = $request->input('city');
+
+            $query->whereHas('address', function ($q) use ($city) {
+                $q->where('city', 'like', '%' . $city . '%');
+            });
+        }
 
         $listings = $query->paginate(25);
 
@@ -114,7 +122,10 @@ class ListingsController extends BaseApiController
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function store(ListingRequest $request): JsonResponse
     {
-        $listing = Listing::create(array_merge($request->validated(), ['user_id' => $request->user()->id]));
+        /** @var Listing $listing */
+        /** @var User $user */
+        $user    = $request->user();
+        $listing = Listing::create(array_merge($request->validated(), ['user_id' => $user->id]));
 
         if ($request->filled('attributes')) {
             $attributes = $request->get('attributes');
@@ -124,6 +135,14 @@ class ListingsController extends BaseApiController
                 }
             }
         }
+
+        if ($request->filled('address_id')) {
+            if ($user->addresses->contains($request->get('address_id'))) {
+                $listing->address_id = $request->get('address_id');
+            }
+        }
+
+        $listing->save();
 
         return $this->successResponse(ListingTransformer::toArray($listing), 201);
     }

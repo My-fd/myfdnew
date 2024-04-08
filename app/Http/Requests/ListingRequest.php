@@ -17,7 +17,7 @@ class ListingRequest extends FormRequest
             'title'       => 'required|string|max:255',
             'description' => 'required|string',
             'price'       => 'numeric',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'required|integer|exists:categories,id',
         ];
     }
 

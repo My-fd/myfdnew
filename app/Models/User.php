@@ -3,29 +3,37 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
- * Пользователь
+ * Class User
  *
- * @property int         $id                ID пользователя
- * @property string      $nickname          Никнейм
- * @property string      $name              Имя
- * @property string      $surname           Фамилия
- * @property string      $email             Почта
- * @property string      $password          Пароль (зашифрован)
- * @property string|null $patronymic        Отчество
- * @property string|null $about             Раздел "О себе"
- * @property string|null $city              Город
- * @property string|null $phone             Телефон
- * @property string|null $country_code      Код страны
- * @property string|null $remember_token    Токен авторизации
- * @property Carbon|null $email_verified_at Когда подтвердил почту
- * @property Carbon      $created_at        Когда создан
- * @property Carbon      $updated_at        Когда обновлён
+ * @property int                       $id                ID пользователя
+ * @property string                    $nickname          Никнейм
+ * @property string                    $name              Имя
+ * @property string                    $surname           Фамилия
+ * @property string                    $email             Почта
+ * @property string                    $password          Пароль (зашифрован)
+ * @property string|null               $patronymic        Отчество
+ * @property string|null               $about             Раздел "О себе"
+ * @property string|null               $city              Город
+ * @property string|null               $phone             Телефон
+ * @property string|null               $country_code      Код страны
+ * @property string|null               $remember_token    Токен авторизации
+ * @property Carbon|null               $email_verified_at Когда подтвердил почту
+ * @property Carbon                    $created_at        Когда создан
+ * @property Carbon                    $updated_at        Когда обновлён
+ * @property-read Listing[]|Collection $listings          Объявления
+ * @property-read Address[]|Collection $addresses         Адреса
+ *
+ * @method static create(array $attributes)
+ *
+ * @package App\Models
  */
 class User extends Authenticatable
 {
@@ -70,6 +78,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    /**
+     * Получить все объявления пользователя.
+     */
+    public function listings(): HasMany
+    {
+        return $this->hasMany(Listing::class);
+    }
 
     /**
      * Генерирует никнейм
