@@ -72,7 +72,7 @@ class AddressController extends BaseApiController
         return $this->successResponse(AddressTransformer::toArray($address));
     }
 
-    #[PathPost('update', '/v1/addresses/{address}', 'Обновление адреса', ['Адреса'], ['auth'])]
+    #[PathPost('update', '/v1/addresses/{address}/update', 'Обновление адреса', ['Адреса'], ['auth'])]
     #[RequestFormEncoded('request')]
     #[ParameterInt('update', Parameter::IN_PATH, 'address', 'ID адреса', 1, 1)]
     #[ResponseSuccess(200, ref: AddressTransformer::class)]
