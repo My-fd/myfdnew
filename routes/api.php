@@ -24,7 +24,9 @@ Route::domain(env('API_URL'))->middleware('api')->name('api.')->group(function (
             Route::get('/listings/my', [ListingsController::class, 'my'])->name('listings.my');
             Route::post('/listings', [ListingsController::class, 'store'])->name('listings.store');
             Route::post('/listings/{listing}/update', [ListingsController::class, 'update'])->name('listings.update');
-            Route::post('/listings/{listing}/delete', [ListingsController::class, 'destroy'])->name('listings.destroy');
+            Route::post('/listings/{listing}/delete', [ListingsController::class, 'delete'])->name('listings.delete');
+            Route::post('/listings/{listing}/attach', [ListingsController::class, 'attachImages'])->name('listings.attach');
+            Route::post('/listings/{listing}/detach', [ListingsController::class, 'detachImages'])->name('listings.detach');
 
             /** Профиль */
             Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');

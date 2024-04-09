@@ -117,7 +117,8 @@ class ListingsController extends BaseApiController
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
     #[PropertyString('attributes[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
-    #[ResponseSuccess(201, vRef: ListingTransformer::class)]
+    #[PropertyString('images[0]', 'Изображение', '/home/user/image.png', parent: 'request')]
+    #[ResponseSuccess(201, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function store(ListingRequest $request): JsonResponse
@@ -142,6 +143,13 @@ class ListingsController extends BaseApiController
             }
         }
 
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('listings', 'public');
+                $listing->images()->create(['path' => $path]);
+            }
+        }
+
         $listing->save();
 
         return $this->successResponse(ListingTransformer::toArray($listing), 201);
@@ -149,7 +157,7 @@ class ListingsController extends BaseApiController
 
     #[PathGet('show', '/v1/listings/{listing}', 'Получение информации об объявлении', ['Объявления'])]
     #[ParameterInt('show', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
-    #[ResponseSuccess(200, vRef: ListingTransformer::class)]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function show(Listing $listing): JsonResponse
@@ -165,13 +173,16 @@ class ListingsController extends BaseApiController
     #[PropertyFloat('price', 'Цена', 100.0, parent: 'request')]
     #[PropertyInt('category_id', 'ID категории', 1, parent: 'request')]
     #[PropertyString('attributes[1]', 'Пара ID -> значение атрибута', 'Тональный крем', parent: 'request')]
-    #[ResponseSuccess(200, vRef: ListingTransformer::class)]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function update(ListingRequest $request, Listing $listing): JsonResponse
     {
-        if ($listing->user_id != $request->user()->id) {
+        /** @var Listing $listing */
+        /** @var User $user */
+        $user    = $request->user();
+        if ($listing->user_id != $user->id) {
             return $this->errorResponse('Нет доступа', 403);
         }
 
@@ -185,6 +196,14 @@ class ListingsController extends BaseApiController
             }
         }
 
+        if ($request->filled('address_id')) {
+            if ($user->addresses->contains($request->get('address_id'))) {
+                $listing->address_id = $request->get('address_id');
+            }
+        }
+
+        $listing->save();
+
         return $this->successResponse(ListingTransformer::toArray($listing));
     }
 
@@ -193,7 +212,7 @@ class ListingsController extends BaseApiController
     #[ResponseSuccess(204)]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function destroy(Request $request, Listing $listing): JsonResponse
+    public function delete(Request $request, Listing $listing): JsonResponse
     {
         if ($listing->user_id != $request->user()->id) {
             return $this->errorResponse('Нет доступа', 403);
@@ -202,5 +221,51 @@ class ListingsController extends BaseApiController
         $listing->delete();
 
         return $this->successResponse([]);
+    }
+
+    #[PathPost('attach', '/v1/listings/{listing}/attach', 'Добавление изображений к объявлению', ['Объявления'], ['auth'])]
+    #[RequestFormEncoded('request')]
+    #[ParameterInt('attach', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
+    #[PropertyString('images[0]', 'Изображение', '/home/user/image.png', parent: 'request')]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
+    #[ResponseError(403, 'Нет доступа', 'Forbidden')]
+    #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
+    #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
+    public function attachImages(Request $request, Listing $listing): JsonResponse
+    {
+        if ($listing->user_id != $request->user()->id) {
+            return $this->errorResponse('Нет доступа', 403);
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('listings', 'public');
+                $listing->images()->create(['path' => $path]);
+            }
+        }
+
+        return $this->successResponse(ListingTransformer::toArray($listing));
+    }
+
+    #[PathPost('detach', '/v1/listings/{listing}/detach', 'Удаление изображений из объявления', ['Объявления'], ['auth'])]
+    #[RequestFormEncoded('request')]
+    #[ParameterInt('detach', Parameter::IN_PATH, 'listing', 'ID объявления', 1, 1)]
+    #[PropertyInt('image_ids[0]', 'Массив ID изображений для удаления', 1, parent: 'request')]
+    #[ResponseSuccess(200, ref: ListingTransformer::class)]
+    #[ResponseError(403, 'Нет доступа', 'Forbidden')]
+    #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
+    #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
+    public function detachImages(Request $request, Listing $listing): JsonResponse
+    {
+        if ($listing->user_id != $request->user()->id) {
+            return $this->errorResponse('Нет доступа', 403);
+        }
+
+        $imageIds = $request->input('image_ids', []);
+        if (!empty($imageIds)) {
+            $listing->images()->whereIn('id', $imageIds)->delete();
+        }
+
+        return $this->successResponse(ListingTransformer::toArray($listing));
     }
 }

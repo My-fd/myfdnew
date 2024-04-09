@@ -43,6 +43,14 @@ class ListingTransformer
                 'value' => $attribute['pivot']['value'],
             ];
         }
+        $images = [];
+
+        foreach ($listing->images as $image) {
+            $images[] = [
+                'id'  => $image->id,
+                'url' => $image->url,
+            ];
+        }
 
         return [
             'id'          => $listing->id,
@@ -52,6 +60,7 @@ class ListingTransformer
             'user'        => UserTransformer::toArray($listing->user),
             'category'    => CategoryTransformer::toArray($listing->category),
             'attributes'  => $attributes,
+            'images'      => $images,
             'city'        => $listing->address?->city,
             'deleted_at'  => $listing->deleted_at?->format('Y-m-d h:i'),
             'created_at'  => $listing->created_at?->format('Y-m-d h:i'),
