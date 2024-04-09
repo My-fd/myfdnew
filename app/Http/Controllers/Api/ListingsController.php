@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\AttachImageRequest;
+use App\Http\Requests\DetachImageRequest;
+use App\Http\Requests\UpdateListingRequest;
 use App\Models\Attribute;
 use App\Models\User;
 use App\Openapi\Attributes\Additional\Controller;
@@ -19,7 +22,7 @@ use App\OpenapiCustom\ResponseError;
 use App\OpenapiCustom\ResponseSuccess;
 use App\Transformers\ListingTransformer;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\ListingRequest;
+use App\Http\Requests\StoreListingRequest;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 
@@ -121,7 +124,7 @@ class ListingsController extends BaseApiController
     #[ResponseSuccess(201, ref: ListingTransformer::class)]
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function store(ListingRequest $request): JsonResponse
+    public function store(StoreListingRequest $request): JsonResponse
     {
         /** @var Listing $listing */
         /** @var User $user */
@@ -177,11 +180,11 @@ class ListingsController extends BaseApiController
     #[ResponseError(400, 'Ошибка валидации', 'Bad Request')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function update(ListingRequest $request, Listing $listing): JsonResponse
+    public function update(UpdateListingRequest $request, Listing $listing): JsonResponse
     {
         /** @var Listing $listing */
         /** @var User $user */
-        $user    = $request->user();
+        $user = $request->user();
         if ($listing->user_id != $user->id) {
             return $this->errorResponse('Нет доступа', 403);
         }
@@ -231,7 +234,7 @@ class ListingsController extends BaseApiController
     #[ResponseError(403, 'Нет доступа', 'Forbidden')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function attachImages(Request $request, Listing $listing): JsonResponse
+    public function attachImages(AttachImageRequest $request, Listing $listing): JsonResponse
     {
         if ($listing->user_id != $request->user()->id) {
             return $this->errorResponse('Нет доступа', 403);
@@ -255,7 +258,7 @@ class ListingsController extends BaseApiController
     #[ResponseError(403, 'Нет доступа', 'Forbidden')]
     #[ResponseError(404, 'Объявление не найдено', 'Not Found')]
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
-    public function detachImages(Request $request, Listing $listing): JsonResponse
+    public function detachImages(DetachImageRequest $request, Listing $listing): JsonResponse
     {
         if ($listing->user_id != $request->user()->id) {
             return $this->errorResponse('Нет доступа', 403);

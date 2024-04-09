@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ListingRequest;
+use App\Http\Requests\StoreListingRequest;
 use App\Models\Category;
 use App\Models\Listing;
 use Illuminate\Http\Request;
@@ -28,7 +28,7 @@ class ListingsController extends Controller
         return view('web.listings.create', compact('categories'));
     }
 
-    public function store(ListingRequest $request)
+    public function store(StoreListingRequest $request)
     {
         $listing = new Listing($request->validated());
         $listing->save();
@@ -46,7 +46,7 @@ class ListingsController extends Controller
         return view('listings.edit', compact('listing'));
     }
 
-    public function update(ListingRequest $request, Listing $listing)
+    public function update(StoreListingRequest $request, Listing $listing)
     {
         $listing->update($request->validated());
 
