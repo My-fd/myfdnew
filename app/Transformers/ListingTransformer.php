@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use App\Openapi\Attributes\Additional\Component;
+use App\Openapi\Attributes\PropertyArray;
 use App\Openapi\Attributes\PropertyFloat;
 use App\Openapi\Attributes\PropertyInt;
 use App\Openapi\Attributes\PropertyObject;
@@ -18,6 +19,10 @@ use App\Models\Listing;
 #[PropertyString('description', 'Описание объявления', 'Описание товара')]
 #[PropertyFloat('price', 'Цена', 100.10)]
 #[PropertyObject('category', 'Категория объявления', ref: CategoryTransformer::class)]
+#[PropertyArray('images', 'Изображения')]
+#[PropertyObject('image', parent: 'images')]
+#[PropertyInt('id', 'ID Изображения', 1, parent: 'images.image')]
+#[PropertyString('url', 'url Изображения', 'http://localhost/storage/listings/pdntzHl4HATNMay7hL6OdyUYwkLQ3ytQNeWI2hGu.png', parent: 'images.image')]
 #[PropertyObject('user', 'Автор объявления', ref: UserTransformer::class)]
 #[PropertyString('city', 'Город объявления', 'Москва')]
 #[PropertyString('created_at', 'Дата создания объявления', '2023-10-07 07:22')]

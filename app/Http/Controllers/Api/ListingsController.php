@@ -25,6 +25,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreListingRequest;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Контроллер объявлений
@@ -265,8 +266,13 @@ class ListingsController extends BaseApiController
         }
 
         $imageIds = $request->input('image_ids', []);
-        if (!empty($imageIds)) {
-            $listing->images()->whereIn('id', $imageIds)->delete();
+
+        // Получаем только те изображения, которые принадлежат данному объявлению
+        $images = $listing->images()->whereIn('id', $imageIds)->get();
+
+        foreach ($images as $image) {
+            Storage::delete('public/' . $image->path);
+            $image->delete();
         }
 
         return $this->successResponse(ListingTransformer::toArray($listing));
