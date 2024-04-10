@@ -27,7 +27,6 @@ class UpdateListingRequest extends FormRequest
             'price'        => 'sometimes|numeric|min:0',
             'category_id'  => 'sometimes|integer|exists:categories,id',
             'attributes'   => 'sometimes|array',
-            'attributes.*' => 'string',
         ];
     }
 }
