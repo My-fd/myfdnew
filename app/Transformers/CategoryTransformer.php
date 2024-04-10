@@ -33,6 +33,16 @@ class CategoryTransformer
             return AttributesTransformer::toArray($attribute);
         });
 
+        $subCategory = $category->children;
+
+        foreach ($subCategory as $item) {
+            $subAttributesData = $item->attributes->map(function ($attribute) {
+                return AttributesTransformer::toArray($attribute);
+            });
+
+            $item['attributes'] = $subAttributesData;
+        }
+
         return [
             'id'          => $category->id,
             'parent_id'   => $category->parent_id,
