@@ -12,7 +12,6 @@ use App\Openapi\Attributes\Parameter;
 use App\Openapi\Attributes\ParameterInt;
 use App\Openapi\Attributes\PathGet;
 use App\Openapi\Attributes\PathPost;
-use App\Openapi\Attributes\PropertyArray;
 use App\Openapi\Attributes\PropertyFloat;
 use App\Openapi\Attributes\PropertyInt;
 use App\Openapi\Attributes\PropertyString;

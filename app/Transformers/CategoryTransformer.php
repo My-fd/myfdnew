@@ -34,11 +34,13 @@ class CategoryTransformer
         });
 
         return [
-            'id'         => $category->id,
-            'parent_id'  => $category->parent_id,
-            'name'       => $category->name,
-            'image_url'  => asset($category->image_url),
-            'attributes' => $attributesData,
+            'id'          => $category->id,
+            'parent_id'   => $category->parent_id,
+            'parent'      => $category->parent_id ? CategoryTransformer::toArray($category->parent) : null,
+            'name'        => $category->name,
+            'image_url'   => asset($category->image_url),
+            'attributes'  => $attributesData,
+            'subcategory' => $category->children,
         ];
     }
 }

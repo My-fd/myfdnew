@@ -26,7 +26,7 @@ class CategoriesController extends BaseApiController
     #[ResponseError(500, 'Ошибка сервера', 'Internal Server Error')]
     public function index(): JsonResponse
     {
-        $categories            = Category::all();
+        $categories            = Category::query()->whereNull('parent_id')->with('children')->get();
         $transformedCategories = [];
 
         foreach ($categories as $category) {
